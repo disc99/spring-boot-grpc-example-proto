@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+option java_package = "io.example.url";
+
+package url;
+
+service UrlService {
+  rpc Shortcut (ShortcutRequest) returns (ShortcutResponse) {}
+}
+
+service UrlService {
+  rpc Parse (ParseRequest) returns (ParseResponse) {}
+}
+
+message ShortcutRequest {
+  string baseUrl = 1;
+}
+
+message ShortcutResponse {
+  string shortUrl = 1;
+}
+
+message ParseRequest {
+  string shortUrl = 1;
+}
+
+message ParseResponse {
+  string baseUrl = 1;
+}
