@@ -35,3 +35,5 @@ gradle-app.setting
 hs_err_pid*
 
 
+# Mac
+**/.DS_Store
