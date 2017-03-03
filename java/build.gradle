@@ -1,0 +1,62 @@
+buildscript {
+  repositories {
+    mavenCentral()
+  }
+  dependencies {
+    classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.1'
+  }
+}
+
+ext {
+    jdk = 1.8
+    grpcVersion = '1.0.0'
+}
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'com.google.protobuf'
+
+    group = 'spring-boot-grpc-example-proto'
+
+    repositories {
+        mavenCentral()
+    }
+    compileJava {
+        sourceCompatibility = rootProject.jdk
+        targetCompatibility = rootProject.jdk
+        options.encoding = "UTF-8"
+    }
+    protobuf {
+        protoc {
+            artifact = 'com.google.protobuf:protoc:3.0.0'
+        }
+        plugins {
+            grpc {
+                artifact = "io.grpc:protoc-gen-grpc-java:${grpcVersion}"
+            }
+        }
+        generateProtoTasks {
+            all()*.plugins {
+                grpc {
+                    option 'enable_deprecated=false'
+                }
+            }
+        }
+    }
+    dependencies {
+        compile "io.grpc:grpc-netty:${grpcVersion}"
+        compile "io.grpc:grpc-protobuf:${grpcVersion}"
+        compile "io.grpc:grpc-stub:${grpcVersion}"
+    }
+}
+
+
+project(":url-service") {
+    version = '1.0'
+    sourceSets.main.proto.srcDir '../../proto/UrlService'
+}
+
+project(":echo-service") {
+    version = '2.0'
+    sourceSets.main.proto.srcDir '../../proto/EchoService'
+}
