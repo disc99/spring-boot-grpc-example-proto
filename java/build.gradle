@@ -15,6 +15,7 @@ ext {
 subprojects {
     apply plugin: 'java'
     apply plugin: 'com.google.protobuf'
+    apply plugin: 'maven-publish'
 
     group = 'spring-boot-grpc-example-proto'
 
@@ -47,6 +48,23 @@ subprojects {
         compile "io.grpc:grpc-netty:${grpcVersion}"
         compile "io.grpc:grpc-protobuf:${grpcVersion}"
         compile "io.grpc:grpc-stub:${grpcVersion}"
+    }
+    publishing {
+        repositories {
+            maven {
+                url 's3://repo.disc99.io/maven2'
+                credentials(AwsCredentials) {
+                    accessKey System.getenv('S3_MAVEN_ACCESS_KEY')
+                    secretKey System.getenv('S3_MAVEN_SECRET_KEY')
+                }
+            }
+        }
+        
+        publications {
+            mavenJava(MavenPublication) {
+                from components.java
+            }
+        }
     }
 }
 
